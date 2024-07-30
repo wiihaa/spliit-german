@@ -1,6 +1,6 @@
 services:
   app:
-    image: spliit2:latest
+    build: .
     ports:
       - 3000:3000
     env_file:
@@ -8,6 +8,10 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    networks:
+      minio_network:
+        ipv4_address: 172.35.1.11
+    restart: on-failure
 
   db:
     image: postgres:latest
@@ -22,3 +26,11 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    networks:
+      minio_network:
+        ipv4_address: 172.35.1.12
+    restart: on-failure
+
+networks:
+  minio_network:
+    external: true
